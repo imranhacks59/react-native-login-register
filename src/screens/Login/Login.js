@@ -6,13 +6,23 @@ import { theme } from '../../core/Theme'
 import { Button } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { userLogin } from '../../redux/actions/userAction'
+import { emailValidator } from '../../utils/EmailValidator'
+import { passwordValidator } from '../../utils/PasswordValidator'
 
 const Login = ({navigation}) => {
-  const [email, setEmail] = useState({ value: ''});
-  const [password, setPassword] = useState({ value: '' });
+  const [email, setEmail] = useState({ value: '',error: ''});
+  const [password, setPassword] = useState({ value: '',error: '' });
   
   const dispatch=useDispatch()
   const loginSubmit=()=>{
+    const emailError = emailValidator(email.value)
+    const passwordError = passwordValidator(password.value)
+    if (emailError || passwordError) {
+      setEmail({ ...email, error: emailError })
+      setPassword({ ...password, error: passwordError })
+      return
+    }
+   
      dispatch(userLogin())
   };
   return (
@@ -22,7 +32,9 @@ const Login = ({navigation}) => {
       label="Email"
       returnKeyType="next"
       value={email.value}
-      onChangeText={(text) => setEmail({ value: text})}
+      onChangeText={(text) => setEmail({ value: text,error: ''})}
+      error={!!email.error}
+        errorText={email.error}
       autoCapitalize="none"
       autoCompleteType="email"
       textContentType="emailAddress"
@@ -32,7 +44,9 @@ const Login = ({navigation}) => {
         label="Password"
         returnKeyType="done"
         value={password.value}
-        onChangeText={(text) => setPassword({ value: text})}
+        onChangeText={(text) => setPassword({ value: text,error:''})}
+        error={!!password.error}
+        errorText={password.error}
         secureTextEntry
       />
       <View style={styles.forgotPassword}>

@@ -11,7 +11,8 @@ const Stack = createStackNavigator();
 
 
 export default function Routes() {
-const isAuthenticated = useSelector((state)=>state.user)
+const {isAuthenticated} = useSelector((state)=>state.user)
+// const isAuthenticated=false;
 
     return (
         <NavigationContainer>
